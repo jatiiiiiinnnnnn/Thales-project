@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Security Guardian</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    .status {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+    .safe {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    .dangerous {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    .button {
+      background-color: #1976d2;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>AI Security Guardian</h2>
+  <div id="currentStatus" class="status"></div>
+  <button id="checkPage" class="button">Check Current Page</button>
+  <button id="viewDashboard" class="button">View Dashboard</button>
+  <script src="popup.js"></script>
+</body>
+</html>
