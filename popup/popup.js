@@ -3,12 +3,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const viewDashboardButton = document.getElementById("viewDashboard");
   const currentStatus = document.getElementById("currentStatus");
 
-  // Check current page when popup opens
+  // Check current page URL when popup opens
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const currentUrl = tabs[0].url;
     checkUrl(currentUrl);
   });
 
+  // Check the current page URL when the button is clicked
   checkPageButton.addEventListener("click", function () {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const currentUrl = tabs[0].url;
@@ -16,20 +17,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Open the dashboard
   viewDashboardButton.addEventListener("click", function () {
-    chrome.tabs.create({ url: "dashboard/dashboard.html" });
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("dashboard/dashboard.html"),
+    });
   });
 
+  // Analyze URL
   async function checkUrl(url) {
-    try {
-      const result = await analyzeUrl(url);
-      updateStatus(result);
-    } catch (error) {
-      currentStatus.className = "status dangerous";
-      currentStatus.textContent = "Error checking URL: " + error.message;
-    }
+    chrome.runtime.sendMessage(
+      { type: "analyzeUrl", url },
+      function (response) {
+        if (response && response.isSafe !== undefined) {
+          updateStatus(response);
+        } else {
+          currentStatus.className = "status dangerous";
+          currentStatus.textContent = "Error checking URL!";
+        }
+      }
+    );
   }
 
+  // Update popup UI with analysis result
   function updateStatus(result) {
     currentStatus.className = result.isSafe
       ? "status safe"
